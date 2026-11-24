@@ -5,6 +5,10 @@
 **Полупрозрачный Twitch-чат поверх игр и рабочего стола, полностью невидимый для OBS и захвата экрана.**  
 *Semi-transparent overlay Twitch chat over games & desktop, completely excluded from OBS and screen capture.*
 
+<br>
+
+[![ObsHiddenChat Overlay Preview](assets/preview.png)](assets/preview.png)
+
 ---
 
 ### 🌐 Выберите язык / Select Language:
@@ -50,6 +54,12 @@
 6. **📊 Панель статуса стрима OBS**:
    - Выносная компактная строка поверх всего (кнопка `⧉`): таймкод LIVE / REC, битрейт, потери кадров, FPS, нагрузка CPU через протокол OBS WebSocket v5.
 
+<br>
+
+<div align="center">
+  <img src="assets/settings.png" alt="Панель настроек и оверлей OBS" width="900" />
+</div>
+
 ---
 
 ### 🚀 Быстрый старт
@@ -72,7 +82,7 @@ npm install
 npm start
 ```
 
-> **Совет:** Для удобного запуска без терминала воспользуйтесь скриптом `tools/make-shortcut.ps1` — он создаст ярлык **Stream Chat (hidden)** на рабочем столе.
+> **Совет:** Для удобного запуска без терминала воспользуйтесь скриптом `tools/make-shortcut.ps1` — он создаст или обновит ярлык **Stream Chat (hidden)** на рабочем столе.
 
 ---
 
@@ -132,6 +142,12 @@ A semi-transparent Twitch chat overlay displayed on top of everything on your ma
 6. **📊 OBS Stream Status Overlay**:
    - Detachable floating status bar (`obspanel.html` via `⧉` button): real-time LIVE / REC timecode, bitrate, dropped frame rate, FPS, and CPU usage via OBS WebSocket v5 protocol.
 
+<br>
+
+<div align="center">
+  <img src="assets/settings.png" alt="Settings Panel and OBS Overlay" width="900" />
+</div>
+
 ---
 
 ### 🚀 Getting Started
@@ -154,7 +170,7 @@ npm install
 npm start
 ```
 
-> **Tip:** You can create a desktop shortcut by running `tools/make-shortcut.ps1` in PowerShell.
+> **Tip:** You can create or update a desktop shortcut by running `tools/make-shortcut.ps1` in PowerShell.
 
 ---
 

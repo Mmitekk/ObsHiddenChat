@@ -513,6 +513,10 @@ function openSettings() {
         nodeIntegration: false
       }
     });
+    if (CAPTURE_TEST) {
+      settingsWin.setPosition(540, 110);
+      settingsWin.setSize(520, 720);
+    }
     settingsWin.removeMenu();
     settingsWin.setContentProtection(!CAPTURE_TEST); // окно настроек тоже не для зрителей
     settingsWin.loadFile('settings.html');
@@ -752,11 +756,29 @@ app.whenReady().then(() => {
   obs.start(obsAutoCfg);
 
   if (CAPTURE_TEST) {
-    setTimeout(() => handleIrcLine('@badge-info=;badges=subscriber/12,glhf-pledge/1;color=#FF4500;display-name=TestSub;subscriber=1 :testsub!testsub@testsub.tmi.twitch.tv PRIVMSG #twitchpresents :привет, я подписчик!'), 12000);
-    setTimeout(() => handleIrcLine('@badges=follower/1;color=#00FF00;display-name=TestFollower :testf!testf@testf.tmi.twitch.tv PRIVMSG #twitchpresents :а я фолловер'), 13500);
-    setTimeout(() => handleIrcLine('@badges=;color=#0000FF;display-name=RandomViewer :rv!rv@rv.tmi.twitch.tv PRIVMSG #twitchpresents :я просто прохожий'), 15000);
-    setTimeout(openSettings, 9000);
-    setTimeout(openObsPanel, 11000);
+    onlineViewers.set('streamer_friend', { username: 'streamer_friend', displayName: 'StreamerFriend', joinedAt: Date.now() });
+    onlineViewers.set('moderator_alex', { username: 'moderator_alex', displayName: 'Moderator_Alex', joinedAt: Date.now() });
+    onlineViewers.set('vip_viewer', { username: 'vip_viewer', displayName: 'VIP_Viewer', joinedAt: Date.now() });
+    onlineViewers.set('cool_gamer99', { username: 'cool_gamer99', displayName: 'Cool_Gamer99', joinedAt: Date.now() });
+    onlineViewers.set('night_owl', { username: 'night_owl', displayName: 'Night_Owl', joinedAt: Date.now() });
+    onlineViewers.set('anna_play', { username: 'anna_play', displayName: 'Anna_Play', joinedAt: Date.now() });
+    initialNamesLoaded = true;
+    broadcastViewers();
+
+    if (!cfg.userAlerts || cfg.userAlerts.length === 0) {
+      cfg.userAlerts = [
+        { id: '1', username: 'streamer_friend', sound: 'custom', customSoundPath: 'C:\\Sounds\\vip_alert.mp3', enabled: true },
+        { id: '2', username: 'moderator_alex', sound: 'bell', customSoundPath: '', enabled: true }
+      ];
+    }
+
+    setTimeout(openSettings, 800);
+    setTimeout(openObsPanel, 1200);
+    setTimeout(() => {
+      if (win && !win.webContents.isDestroyed()) {
+        win.webContents.executeJavaScript('toggleViewersBox(true)');
+      }
+    }, 1500);
   }
 });
 
