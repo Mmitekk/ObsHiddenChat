@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Настройки — Мой чат</title>
+<style>
+  :root { --bg:#1f1f23; --ac:#9147ff; --ok:#2ecc71; --danger:#e74c3c; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { background:var(--bg); color:#efeff1; font:13px/1.5 "Segoe UI", system-ui, sans-serif; }
+  body { padding:14px 16px; user-select:none; }
+  h1 { font-size:15px; color:#bf94ff; margin-bottom:12px; }
+  h2 { font-size:12px; color:#888; text-transform:uppercase; letter-spacing:.5px; margin:14px 0 8px; border-top:1px solid #303032; padding-top:12px; }
+  .row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  label.tog { display:flex; align-items:center; gap:6px; cursor:pointer; }
+  input[type=range] { flex:1; }
+  #volval, #opval { width:44px; text-align:right; color:#aaa; }
+  table { width:100%; border-collapse:collapse; margin-top:4px; }
+  td { padding:6px 4px; border-bottom:1px solid #303032; vertical-align:middle; }
+  td.name { width:110px; color:#ddd; }
+  td.test { width:36px; text-align:right; }
+  select, input[type=text], input[type=password], input[type=number] { background:#0e0e10; color:#efeff1; border:1px solid #3a3a3d; border-radius:4px; padding:4px 6px; font-size:12px; width:100%; }
+  button { background:#3a3a3d; color:#fff; border:0; border-radius:4px; padding:4px 10px; font-size:12px; cursor:pointer; }
+  button:hover { background:#4a4a4f; }
+  button.primary { background:var(--ac); color:#fff; }
+  button.primary:hover { background:#772ce8; }
+  button.danger { background:rgba(231,76,60,.2); color:#ff6b6b; border:1px solid rgba(231,76,60,.4); }
+  button.danger:hover { background:rgba(231,76,60,.4); }
+  .hint { margin-top:14px; color:#888; font-size:11px; line-height:1.5; }
+  #zoomval { width:52px; text-align:right; color:#aaa; }
+
+  /* Карточки пользователей для оповещений */
+  .user-card { background:#18181b; border:1px solid #303032; border-radius:6px; padding:8px 10px; margin-bottom:8px; }
+  .user-card .card-row { display:flex; align-items:center; gap:8px; }
+  .user-card .card-custom { margin-top:6px; display:flex; align-items:center; gap:6px; }
+  .user-card .custom-path { flex:1; font-size:11px; text-overflow:ellipsis; }
+  .badge-count { background:rgba(145,71,255,.2); color:#bf94ff; padding:2px 6px; border-radius:10px; font-size:11px; font-weight:600; }
+</style>
+</head>
+<body>
+  <h1>Мой чат — настройки</h1>
+
+  <h2>Окно</h2>
+  <div class="row"><label class="tog"><input type="checkbox" id="st-topmost"> поверх всех окон</label></div>
+  <div class="row"><label class="tog"><input type="checkbox" id="st-protect"> скрыть от захвата (OBS, скриншоты)</label></div>
+  <div class="row"><label class="tog"><input type="checkbox" id="st-clickthru"> сквозь клики (Alt+Shift+C)</label></div>
+  <div class="row">
+    <span style="width:110px">Прозрачность</span>
+    <input type="range" id="st-opacity" min="20" max="100" value="100">
+    <span id="opval">100%</span>
+  </div>
+  <div class="row">
+    <span style="width:110px">Масштаб чата</span>
+    <button id="zoomout" title="Меньше шрифт">A−</button>
+    <button id="zoomin" title="Больше шрифт">A+</button>
+    <span id="zoomval">100%</span>
+  </div>
+  <div class="row">
+    <span style="width:110px">Аккаунт</span>
+    <button id="btn-login" title="Войти в Twitch в окне виджета — сессия сохранится">Войти в Twitch</button>
+  </div>
+
+  <h2>Звук сообщений</h2>
+  <div class="row">
+    <label class="tog"><input type="checkbox" id="master"> звук включён</label>
+  </div>
+  <div class="row">
+    <span style="width:110px">Громкость</span>
+    <input type="range" id="volume" min="0" max="100" value="70">
+    <span id="volval">70%</span>
+  </div>
+  <table>
+    <tr><td class="name">Общий</td><td><select id="sel-common"></select></td><td class="test"><button id="test-common" title="Прослушать">▶</button></td></tr>
+    <tr><td class="name">Подписчик</td><td><select id="sel-sub"></select></td><td class="test"><button id="test-sub" title="Прослушать">▶</button></td></tr>
+    <tr><td class="name">Фолловер</td><td><select id="sel-follower"></select></td><td class="test"><button id="test-follower" title="Прослушать">▶</button></td></tr>
+    <tr><td class="name">Не-фолловер</td><td><select id="sel-nonfollower"></select></td><td class="test"><button id="test-nonfollower" title="Прослушать">▶</button></td></tr>
+  </table>
+
+  <h2>Оповещения о приходе зрителей на стрим</h2>
+  <div class="hint" style="margin-top:0; margin-bottom:10px; background:#141416; padding:8px 10px; border-radius:4px; border:1px solid #2e2e32">
+    👥 <b>Онлайн сейчас:</b> <span id="viewers-count-badge" class="badge-count">0</span> зрителей. Отслеживаются <b>все</b> подключенные к стриму пользователи (включая не пишущих в чат).
+  </div>
+
+  <div class="row">
+    <label class="tog"><input type="checkbox" id="notify-all"> Оповещать звуком о приходе ЛЮБОГО зрителя</label>
+  </div>
+  <div class="row" id="row-all-sound" style="display:none">
+    <span style="width:110px">Звук для всех</span>
+    <select id="sel-all-arrivals" style="flex:1"></select>
+    <button id="test-all-arrivals" title="Прослушать">▶</button>
+  </div>
+
+  <div class="row">
+    <span style="width:110px">Кулдаун</span>
+    <input type="number" id="arrival-cooldown" min="5" max="600" value="60" style="width:70px">
+    <span style="color:#aaa">сек между повторными оповещениями одного человека</span>
+  </div>
+
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; margin-bottom:8px;">
+    <span style="font-weight:600; color:#ddd">Оповещения для конкретных пользователей:</span>
+    <button id="btn-add-user" class="primary">+ Добавить пользователя</button>
+  </div>
+
+  <div id="user-alerts-list">
+    <!-- Список отслеживаемых пользователей генерируется динамически -->
+  </div>
+
+  <h2>OBS — статус стрима</h2>
+  <div class="row"><span style="width:110px">Хост</span><input type="text" id="obs-host"></div>
+  <div class="row"><span style="width:110px">Порт</span><input type="text" id="obs-port"></div>
+  <div class="row"><span style="width:110px">Пароль</span><input type="password" id="obs-pass" placeholder="если включена аутентификация"></div>
+  <div class="row">
+    <span style="width:110px">Прозр. панели</span>
+    <input type="range" id="obs-op" min="20" max="100" value="90">
+    <span id="obsv">90%</span>
+  </div>
+  <div class="hint">
+    В OBS: Инструменты → Настройки сервера WebSocket — сервер включён по умолчанию
+    на порту 4455. Панель стрима выносится кнопкой ⧉ в виджете.
+  </div>
+
+  <div class="hint">
+    Горячие клавиши: <b>Alt+Shift+H</b> — скрыть/показать виджет,
+    <b>Alt+Shift+C</b> — сквозь клики, <b>Alt+Shift+↑/↓</b> — прозрачность.
+  </div>
+<script src="soundbank.js"></script>
+<script src="settings.js"></script>
+</body>
+</html>

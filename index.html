@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Мой чат</title>
+<style>
+  :root { --ac:#9147ff; --ok:#2ecc71; --warn:#f0a30a; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { height:100%; background:transparent; color:#efeff1; font:13px/1.4 "Segoe UI", system-ui, sans-serif; overflow:hidden; }
+  #wrap { display:flex; flex-direction:column; height:100%; }
+  #bar { background:rgba(24,24,27,.94); padding:6px 8px; display:flex; flex-direction:column; gap:6px; border-bottom:1px solid rgba(48,48,50,.9); flex:0 0 auto; border-radius:6px 6px 0 0; }
+  #bar.min #chanrow, #bar.min #viewers-box { display:none !important; }
+  .row { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+  #wtitle, #titlespace { -webkit-app-region: drag; }
+  #wtitle { font-size:12px; color:#bf94ff; font-weight:600; cursor:default; }
+  .brand { font-size:12px; color:#bf94ff; font-weight:600; }
+  input[type=text] { background:rgba(14,14,16,.9); color:#efeff1; border:1px solid #3a3a3d; border-radius:4px; padding:3px 6px; font-size:12px; flex:1 1 120px; min-width:80px; }
+  button { background:#3a3a3d; color:#fff; border:0; border-radius:4px; padding:4px 9px; font-size:12px; cursor:pointer; }
+  button:hover { background:#4a4a4f; }
+  button.primary { background:var(--ac); }
+  button.primary:hover { background:#772ce8; }
+  .dot { width:8px; height:8px; border-radius:50%; background:#555; flex:0 0 auto; }
+  .dot.live { background:var(--ok); box-shadow:0 0 5px var(--ok); }
+  #obs-line { font-size:11px; color:#bbb; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #err { display:none; padding:6px 10px; color:#ff8383; font-size:12px; background:rgba(24,24,27,.92); }
+  #chatspace { flex:1 1 auto; }
+
+  /* Панель зрителей онлайн */
+  #viewers-box { display:none; flex-direction:column; gap:6px; background:rgba(14,14,16,0.96); border:1px solid #3a3a3d; border-radius:4px; padding:6px 8px; margin-top:2px; }
+  #viewers-list { max-height:160px; overflow-y:auto; display:flex; flex-direction:column; gap:3px; }
+  .viewer-item { display:flex; align-items:center; justify-content:space-between; padding:3px 6px; border-radius:3px; background:rgba(30,30,34,0.6); font-size:12px; }
+  .viewer-item:hover { background:rgba(50,50,58,0.8); }
+  .viewer-name { color:#efeff1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .viewer-tracked { color:#f1c40f; font-size:11px; margin-right:4px; }
+  .btn-track { background:transparent; color:#aaa; padding:1px 5px; font-size:11px; }
+  .btn-track:hover { background:#3a3a3d; color:#bf94ff; }
+
+  /* Всплывающее оповещение о входе пользователя */
+  #arrival-toast { display:none; padding:6px 10px; background:rgba(145,71,255,0.95); color:#fff; font-size:12px; font-weight:600; text-align:center; box-shadow:0 3px 8px rgba(0,0,0,0.6); border-bottom:1px solid rgba(255,255,255,0.2); }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="bar">
+    <div class="row" id="titlerow">
+      <span id="wtitle" title="Тяни — перетащить окно · клик — свернуть/развернуть панель">💬 Мой чат</span>
+      <span id="titlespace" style="flex:1"></span>
+      <button id="cfg" title="Настройки (окно, звук, оповещения зрителей)">⚙</button>
+      <button id="collapse" title="Свернуть/развернуть панель">▲</button>
+      <button id="wmin" title="Свернуть окно">–</button>
+      <button id="wclose" title="Свернуть в трей (выход — в трее)">✕</button>
+    </div>
+    <div class="row" id="chanrow">
+      <span class="brand">Twitch</span>
+      <input type="text" id="src" placeholder="ник канала">
+      <button class="primary" id="go">Открыть</button>
+      <button id="reload" title="Перезагрузить чат">⟳</button>
+      <button id="btn-viewers" title="Показать зрителей онлайн (чаттеры и зрители)">👥 <span id="viewers-count">0</span></button>
+    </div>
+
+    <!-- Разворачиваемая панель онлайн-зрителей -->
+    <div id="viewers-box">
+      <div class="row" style="justify-content:space-between">
+        <span style="font-weight:600; font-size:11px; color:#bf94ff;">Зрители онлайн (<span id="viewers-total">0</span>)</span>
+        <div style="display:flex; gap:4px">
+          <button id="viewers-resync" title="Синхронизировать с Twitch (NAMES)" style="padding:2px 6px; font-size:11px">⟳</button>
+          <button id="viewers-close" title="Закрыть список" style="padding:2px 6px; font-size:11px">✕</button>
+        </div>
+      </div>
+      <input type="text" id="viewers-search" placeholder="Поиск зрителя по нику...">
+      <div id="viewers-list">
+        <!-- Список заполняется js -->
+      </div>
+    </div>
+
+    <div class="row" id="obsstrip">
+      <span class="dot" id="obs-dot"></span>
+      <span id="obs-line">OBS: подключение…</span>
+      <span style="flex:1"></span>
+      <button id="obs-pop" title="Вынести панель стрима отдельным окном">⧉</button>
+    </div>
+  </div>
+  <div id="arrival-toast"></div>
+  <div id="err"></div>
+  <div id="chatspace"></div>
+</div>
+<script src="soundbank.js"></script>
+<script src="renderer.js"></script>
+</body>
+</html>

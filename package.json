@@ -1,0 +1,16 @@
+{
+  "name": "obs-hidden-chat",
+  "version": "1.0.0",
+  "description": "Chat widget visible to you but excluded from any screen capture (OBS etc.)",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^33.4.11"
+  },
+  "dependencies": {
+    "ws": "^8.22.0"
+  }
+}

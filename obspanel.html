@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Стрим</title>
+<style>
+  :root { --bg:rgba(20,20,22,.92); --ok:#2ecc71; --warn:#f0a30a; --bad:#e74c3c; --ac:#9147ff; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { background:transparent; color:#efeff1; font:12px/1 "Segoe UI", system-ui, sans-serif; overflow:hidden; user-select:none; }
+  #line { display:flex; align-items:center; gap:9px; height:100vh; padding:0 10px 0 12px;
+          background:var(--bg); border:1px solid rgba(90,90,95,.6); border-radius:19px;
+          white-space:nowrap; -webkit-app-region: drag; }
+  .dot { width:9px; height:9px; border-radius:50%; background:#555; flex:0 0 auto; }
+  .dot.live { background:var(--ok); box-shadow:0 0 6px var(--ok); }
+  .dot.rec { background:var(--bad); box-shadow:0 0 6px var(--bad); }
+  #state { font-weight:600; font-size:12px; }
+  #rec { color:#ff9a9a; display:none; }
+  #rec b { font-weight:600; }
+  .seg { color:#bbb; display:none; }
+  .seg b { color:#fff; font-weight:600; }
+  .good { color:var(--ok) !important; }
+  .warn { color:var(--warn) !important; }
+  .bad  { color:var(--bad) !important; }
+  .sp { flex:1; }
+  #close { -webkit-app-region: no-drag; background:transparent; border:0; color:#999; font-size:13px; cursor:pointer; padding:2px 4px; }
+  #close:hover { color:#fff; }
+</style>
+</head>
+<body>
+<div id="line">
+  <span class="dot" id="dot"></span>
+  <span id="state">…</span>
+  <span id="rec">● REC <b id="rectc">00:00</b></span>
+  <span class="seg" id="seg-bit">⬇ <b id="bitv">—</b></span>
+  <span class="seg" id="seg-drop">потери <b id="dropv">—</b></span>
+  <span class="seg" id="seg-net">сеть <b id="netv">—</b></span>
+  <span class="seg" id="seg-fps">FPS <b id="fpsv">—</b></span>
+  <span class="seg" id="seg-cpu">CPU <b id="cpuv">—</b></span>
+  <span class="sp"></span>
+  <button id="close" title="Убрать панель (вернётся в виджет)">✕</button>
+</div>
+<script src="obspanel.js"></script>
+</body>
+</html>
