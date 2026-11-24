@@ -7,8 +7,6 @@
 
 <br>
 
-[![ObsHiddenChat Overlay Preview](assets/preview.png)](assets/preview.png)
-
 ---
 
 ### 🌐 Выберите язык / Select Language:
